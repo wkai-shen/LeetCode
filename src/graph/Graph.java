@@ -7,10 +7,10 @@ public class Graph<T> {
         this.adjVertices = new HashMap<>(numberOfVertex);
     }
 
-    static class Vertex<T> {
+    public static class Vertex<T> {
         T value;
 
-        Vertex(T value) {
+        public Vertex(T value) {
             this.value = value;
         }
 
@@ -95,5 +95,15 @@ public class Graph<T> {
             adjVertices.get(vertex1).remove(vertex2);
             adjVertices.get(vertex2).remove(vertex1);
         }
+    }
+
+    public List<Vertex> getEdge(T value) {
+        Vertex vertex = new Vertex(value);
+
+        return adjVertices.get(vertex);
+    }
+
+    public int getTotalVertex() {
+        return adjVertices.size();
     }
 }
