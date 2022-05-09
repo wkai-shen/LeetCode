@@ -1,17 +1,17 @@
-package graph.DFT;
+package graph.BFT;
 
 import graph.Graph;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
+import java.util.Queue;
 import java.util.stream.IntStream;
 
-
 /**
- * Depth First Traverse
+ * Breadth First Traverse
  */
-public class DFT {
+public class BFT {
     public static void main(String[] args) {
         final int totalVertexes = 10;
         Graph<Integer> graph = new Graph<>(totalVertexes);
@@ -35,41 +35,34 @@ public class DFT {
         graph.addEdge(5, 6);
         graph.addEdge(8, 7);
 
-        List<Integer> results = getDFT(graph, 2);
+        List<Integer> results = getBFT(graph, 1);
     }
 
-    public static <T> List<T> getDFT(Graph<T> graph, T init) {
-        Stack<T> buffer = new Stack<>();
-        List<T> results = new ArrayList<>(graph.getTotalVertex());
+    public static <T> List<T> getBFT(Graph<T> graph, T init) {
+        int totalVertexes = graph.getTotalVertex();
+        List<T> results = new ArrayList<>(totalVertexes);
+        Queue<T> buffer = new ArrayDeque<>(totalVertexes);
 
-        buffer.push(init);
+        buffer.add(init);
 
         while (!buffer.isEmpty()) {
-            T value = buffer.peek();
+            T value = buffer.remove();
 
-            // Added into result list if it's first time visit
-            if (!results.contains(value)) {
-                results.add(value);
-            } else {
-                // 2nd visit the same vertex, we know its connected vertexes are processed already
-                buffer.pop();
-                continue;
-            }
+            results.add(value);
 
             List<Graph.Vertex> allEdges = graph.getEdge(value);
 
             // this vertex has no edge
             if (allEdges.isEmpty()) {
-                buffer.pop();
+                buffer.remove();
                 continue;
             }
 
             for (Graph.Vertex vertex: allEdges) {
                 T vertaxValue = (T) vertex.getValue();
 
-                // Only add the connected vertexes when they are not in the results and stack already
-                if (!buffer.contains(vertaxValue) && !results.contains(vertaxValue)) {
-                    buffer.push(vertaxValue);
+                if (!results.contains(vertaxValue) && !buffer.contains(vertaxValue)) {
+                    buffer.add(vertaxValue);
                 }
             }
         }
